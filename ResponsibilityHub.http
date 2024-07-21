@@ -1,0 +1,6 @@
+@ResponsibilityHub_HostAddress = http://localhost:5298
+
+GET {{ResponsibilityHub_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
