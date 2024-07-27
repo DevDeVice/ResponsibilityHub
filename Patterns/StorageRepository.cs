@@ -1,34 +1,53 @@
-﻿using System.Collections.Generic;
+﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ResponsibilityHub.Patterns
 {
     public class StorageRepository : IRepository
     {
-        private readonly string _connString;
-        private readonly string _container;
+        private readonly string connString;
+        private readonly string container;
+        private readonly BlobServiceClient client;
 
         public StorageRepository() { }
 
         public StorageRepository(string connString, string container)
         {
-            _connString = connString;
-            _container = container;
+            connString = connString;
+            container = container;
+            client = new BlobServiceClient(connString);
         }
 
-        public Task Save<T>(T o) where T : class
+        public async Task<T> Get<T>(Guid id) where T : class
         {
-            throw new NotImplementedException();
-        }
+            var containerClient = client.GetBlobContainerClient(container);
+            var blobClient = containerClient.GetBlobClient($"{id}.json");
+            BlobDownloadResult result = await blobClient.DownloadContentAsync();
+            var content = result.Content.ToString();
 
-        public Task<T> Get<T>() where T : class
-        {
-            throw new NotImplementedException();
+            return JsonSerializer.Deserialize<T>(content);
         }
 
         public IAsyncEnumerable<T> GetEnumerable<T>() where T : class
         {
             throw new NotImplementedException();
+        }
+
+        public async Task Save<T>(T input) where T : Person
+        {
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+            var containerClient = client.GetBlobContainerClient(container);
+            var content = JsonSerializer.Serialize(input, options);
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(content));
+            await containerClient.UploadBlobAsync($"{input.Id}.json", stream);
+
         }
     }
 }
