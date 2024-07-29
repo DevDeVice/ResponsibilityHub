@@ -1,13 +1,14 @@
-﻿
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+
+namespace ResponsibilityHub.Models;
 
 [JsonDerivedType(typeof(Simple), "simple")]
 [JsonDerivedType(typeof(WithPesel), "withPesel")]
-namespace ResponsibilityHub.Models
+public abstract record Person(Guid Id)
 {
-    public abstract record Person(Guid Id, string Name, string Surname);
 
-    public record PersonSimple(Guid Id, string Name, string Surname) : Person(Id, Name, Surname);
+    public record Simple(Guid Id, string Name, string Surname) : Person(Id);
 
-    public record PersonWithPesel(Guid Id, string Name, string Surname, string Pesel) : Person(Id, Name, Surname);
+    public record WithPesel(Guid Id, string Name, string Surname, string Pesel) : Person(Id);
+
 }

@@ -12,13 +12,13 @@ namespace ResponsibilityHub.Controllers
     [Route("basic-route")]
     public class BasicController(StorageConfig config) : Controller
     {
-        /*[HttpGet("persons")]
-        public Task<Person> Get()
+        [HttpGet("persons")]
+        public IAsyncEnumerable<Person> Get()
         {
-            var storageRepo = Factory.Create<StorageRepository>(config);
-            //return storageRepo
-            return storageRepo.GetEnumerable<PersonSimple>();
-        }*/
+            //var storageRepo = Factory.Create<StorageRepository>(config);
+            var storageRepo = Factory.Create(config);
+            return storageRepo.GetEnumerable<Person.Simple>();
+        }
 
         [HttpPost]
         public async Task<IResult> Save([FromBody] PersonRequest request)
@@ -26,7 +26,7 @@ namespace ResponsibilityHub.Controllers
             var mapper = new PersonRequestMapper();
             var person = mapper.Map(request);
             var storage = Factory.Create(config);
-            await storage.Save(request);
+            await storage.Save(person);
             return Results.Ok();
         }
     }
