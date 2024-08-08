@@ -5,7 +5,7 @@ using System.Text.Json;
 namespace ResponsibilityHub.ServiceBus;
 public class ServiceBusManager : IHostedService
 {
-    private const string qName = "sebdzi";
+    private const string qName = "sebdzi-q";
     private readonly ServiceBusClient sbClient;
     private readonly ServiceBusProcessor processor;
     public ServiceBusManager(IAzureClientFactory<ServiceBusClient> clientFactory)
