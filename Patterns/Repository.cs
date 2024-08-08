@@ -20,6 +20,7 @@ public interface IRepository
     Task<T> Get<T>(Guid id) where T : class;
     Task<List<T>> GetAll<T>() where T : class;
     IAsyncEnumerable<T> GetEnumerable<T>() where T : class;
+    Task Delete<T>(Guid id) where T : class;
 }
 public class StorageRepository : IRepository
 {
@@ -174,21 +175,46 @@ public class StorageRepository : IRepository
             }
         }*/
     }
+    /*public class CosmosRepository : IRepository
+    {
+        public Task<T> Get<T>(Guid id) where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAsyncEnumerable<T> GetEnumerable<T>() where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Save<T>(T o) where T : Person
+        {
+            throw new NotImplementedException();
+        }
+    }*/
+    public async Task Delete<T>(Guid id) where T : class
+    {
+        var containerClient = _client.GetBlobContainerClient(_container);
+        var blobClient = containerClient.GetBlobClient($"{id}.json");
+
+        try
+        {
+            await blobClient.DeleteIfExistsAsync();
+        }
+        catch (RequestFailedException ex)
+        {
+            throw new Exception($"Error deleting the blob: {ex.Message}");
+        }
+    }
+    public async Task DeleteAll<T>() where T : class
+    {
+        var containerClient = _client.GetBlobContainerClient(_container);
+
+        // Iterujemy po wszystkich obiektach w kontenerze i usuwamy je
+        await foreach (var blobItem in containerClient.GetBlobsAsync())
+        {
+            var blobClient = containerClient.GetBlobClient(blobItem.Name);
+            await blobClient.DeleteIfExistsAsync();
+        }
+    }
 }
-/*public class CosmosRepository : IRepository
-{
-    public Task<T> Get<T>(Guid id) where T : class
-    {
-        throw new NotImplementedException();
-    }
-
-    public IAsyncEnumerable<T> GetEnumerable<T>() where T : class
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task Save<T>(T o) where T : Person
-    {
-        throw new NotImplementedException();
-    }
-}*/
