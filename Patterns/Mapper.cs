@@ -1,5 +1,6 @@
 ﻿using ResponsibilityHub.Models;
 using ResponsibilityHub.Controllers;
+using ResponsibilityHub.Utility;
 
 namespace ResponsibilityHub.Patterns;
 public interface IMapper<in Input, out Output> where Input : class where Output : class
@@ -17,7 +18,14 @@ public class PersonRequestMapper : IMapper<PersonRequest, Person>
 
         if (!string.IsNullOrWhiteSpace(input.Pesel))
         {
-            builder.WithPesel(input.Pesel);
+            if (PeselValidator.IsValidPesel(input.Pesel))
+            {
+                builder.WithPesel(input.Pesel);
+            }
+            else
+            {
+                throw new ArgumentException("Invalid PESEL number.");
+            }
         }
 
         return builder.Build();

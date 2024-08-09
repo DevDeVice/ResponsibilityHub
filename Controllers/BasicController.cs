@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ResponsibilityHub.Controllers;
-//TODO mozliwosc dodania uzytkownika bez peselu i edycji istniejacego uzytkownika
+//TODO ogarnac dlaczego basicController nie jest uzywany
 public record PersonRequest(Guid Id, string Name, string Surname, string? Pesel);
 
 [ApiController]
@@ -45,8 +45,8 @@ public class BasicController : Controller
         var mapper = new PersonRequestMapper();
         var person = mapper.Map(request);
 
-        var storage = Factory.Create(_config);
-        await storage.Save(person);
+        var storageRepo = Factory.Create(_config);
+        await storageRepo.Save(person);
         return Results.Ok();
     }
 

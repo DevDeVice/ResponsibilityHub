@@ -1,29 +1,19 @@
 ﻿namespace ResponsibilityHub.Patterns;
 
-public class CustomEvent : EventArgs;
-public class Publisher
+public abstract class Publisher
 {
-    public event EventHandler<CustomEvent> CustomEvent;
-    public void Publish()
+    public event EventHandler Handler;
+    public void Publish(EventArgs args)
     {
-        CustomEvent?.Invoke(this, new CustomEvent());
-        //OR
-        foreach(var handler in CustomEvent.GetInvocationList())
-        {
-            handler.DynamicInvoke(this, new CustomEvent());
-        }
+        Handler.Invoke(this, args);
     }
 }
-public class Subscriber
+public abstract class Subscriber
 {
     public void Subscribe(Publisher publisher)
     {
-        publisher.CustomEvent += onEventReised;
+        publisher.Handler += onEventReised;
     }
 
-    private void onEventReised(object? sender, CustomEvent e)
-    {
-        //TODO - Jakas logika u subskrybenta
-        throw new NotImplementedException();
-    }
+    public abstract void onEventReised(object? sender, EventArgs e);
 }
