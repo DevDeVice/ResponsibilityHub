@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ResponsibilityHub.Extensions;
 using ResponsibilityHub.Models;
 using ResponsibilityHub.Patterns;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ResponsibilityHub.Controllers;
-//TODO ogarnac dlaczego basicController nie jest uzywany
 public record PersonRequest(Guid Id, string Name, string Surname, string? Pesel);
 
 [ApiController]
@@ -43,10 +43,17 @@ public class BasicController : Controller
     public async Task<IResult> Save([FromBody] PersonRequest request)
     {
         var mapper = new PersonRequestMapper();
-        var person = mapper.Map(request);
 
+        await mapper
+            .Then((m) => m.Map(request))
+            .Then((p) => new PersonValidator()
+                .Add(new PersonSimpleSpecification())
+                .Execute(p))
+            .Then(async(p) => Factory.Create(_config).Save(p));
+
+        /*var person = mapper.Map(request);
         var storageRepo = Factory.Create(_config);
-        await storageRepo.Save(person);
+        await storageRepo.Save(person);*/
         return Results.Ok();
     }
 

@@ -4,10 +4,7 @@ using ResponsibilityHub.ServiceBus;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
@@ -20,10 +17,21 @@ builder.Services.AddAzureClients(builder =>
     builder.AddServiceBusClient("Endpoint=sb://sbworkshops.servicebus.windows.net/;SharedAccessKeyName=sbworshops-sas;SharedAccessKey=LeIyfXU81aJ9khizi7BLU7IrGSPUMIUI7+ASbMBiAbs=")
     .WithName("sbClient");
 });
-
 builder.Services.AddHostedService<ServiceBusManager>();
-
 var app = builder.Build();
+/*
+// Rejestracja repozytorium
+builder.Services.AddScoped<IRepository<AppointmentApp>, AppointmentRepository>();
+
+// Rejestracja agregatu (jeœli jest u¿ywany bezpoœrednio)
+builder.Services.AddScoped<AppointmentApp>();
+
+// Rejestracja infrastruktury zdarzeñ
+builder.Services.AddScoped<AppointmentInfrastructure>();
+
+*/
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
