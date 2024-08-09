@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ResponsibilityHub")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+510a52e6887e3c89bf638a882977f3edfe4d3a92")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c64f159ada18cfaa94a2d1576dafc4b83e88e0b3")]
 [assembly: System.Reflection.AssemblyProductAttribute("ResponsibilityHub")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ResponsibilityHub")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

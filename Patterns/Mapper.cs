@@ -10,13 +10,16 @@ public class PersonRequestMapper : IMapper<PersonRequest, Person>
 {
     public Person Map(PersonRequest input)
     {
-        if (string.IsNullOrEmpty(input.Pesel) == true)
+        var builder = new PersonBuilder()
+                        .WithId(input.Id)
+                        .WithName(input.Name)
+                        .WithSurname(input.Surname);
+
+        if (!string.IsNullOrWhiteSpace(input.Pesel))
         {
-            return new Person.Simple(input.Id, input.Name, input.Surname);
+            builder.WithPesel(input.Pesel);
         }
-        else
-        {
-            return new Person.WithPesel(input.Id, input.Name, input.Surname, input.Pesel);
-        }
+
+        return builder.Build();
     }
 }

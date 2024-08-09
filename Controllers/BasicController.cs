@@ -24,6 +24,7 @@ public class BasicController : Controller
     {
         var storageRepo = Factory.Create(_config);
         var person = await storageRepo.Get<Person>(id);
+
         if (person == null)
         {
             return NotFound();
@@ -43,9 +44,30 @@ public class BasicController : Controller
     {
         var mapper = new PersonRequestMapper();
         var person = mapper.Map(request);
+
         var storage = Factory.Create(_config);
         await storage.Save(person);
         return Results.Ok();
+    }
+
+    [HttpPut("persons/{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] PersonRequest request)
+    {
+        var storageRepo = Factory.Create(_config);
+        var person = await storageRepo.Get<Person>(id);
+
+        if (person == null)
+        {
+            return NotFound();
+        }
+
+        // Mapowanie żądania na istniejącą osobę
+        var mapper = new PersonRequestMapper();
+        var updatedPerson = mapper.Map(request);
+
+        await storageRepo.Save(updatedPerson);
+
+        return Ok(updatedPerson);
     }
 
     [HttpDelete("persons/{id:guid}")]
@@ -60,6 +82,7 @@ public class BasicController : Controller
         await storageRepo.Delete<Person>(id);
         return NoContent();
     }
+
     [HttpDelete("delete-all")]
     public async Task<IResult> DeleteAll()
     {
@@ -67,4 +90,5 @@ public class BasicController : Controller
         await storageRepo.DeleteAll<Person>();
         return Results.Ok();
     }
+    
 }
