@@ -1,6 +1,9 @@
 using ResponsibilityHub.Patterns;
 using Microsoft.Extensions.Azure;
 using ResponsibilityHub.ServiceBus;
+using ResponsibilityHub.DDD.AppointmentAggregate;
+using ResponsibilityHub.DDD.Infrastructure;
+using ResponsibilityHub.DDD.Base;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,19 +21,19 @@ builder.Services.AddAzureClients(builder =>
     .WithName("sbClient");
 });
 builder.Services.AddHostedService<ServiceBusManager>();
-var app = builder.Build();
-/*
-// Rejestracja repozytorium
+builder.Services.AddSingleton<ServiceBusConfiguration>(sp =>
+    new ServiceBusConfiguration
+    {
+        Name = "sbClient",
+        QueueName = "sebdzi-q"
+    });
+
+
+
 builder.Services.AddScoped<IRepository<AppointmentApp>, AppointmentRepository>();
-
-// Rejestracja agregatu (jeœli jest u¿ywany bezpoœrednio)
-builder.Services.AddScoped<AppointmentApp>();
-
-// Rejestracja infrastruktury zdarzeñ
 builder.Services.AddScoped<AppointmentInfrastructure>();
 
-*/
-
+var app = builder.Build();
 
 
 // Configure the HTTP request pipeline.

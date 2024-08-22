@@ -48,3 +48,5 @@ E:\C#\ResponsibilityHub\ResponsibilityHub\obj\Debug\net8.0\refint\Responsibility
 E:\C#\ResponsibilityHub\ResponsibilityHub\obj\Debug\net8.0\ResponsibilityHub.pdb
 E:\C#\ResponsibilityHub\ResponsibilityHub\obj\Debug\net8.0\ResponsibilityHub.genruntimeconfig.cache
 E:\C#\ResponsibilityHub\ResponsibilityHub\obj\Debug\net8.0\ref\ResponsibilityHub.dll
+E:\C#\ResponsibilityHub\ResponsibilityHub\bin\Debug\net8.0\Castle.Core.dll
+E:\C#\ResponsibilityHub\ResponsibilityHub\bin\Debug\net8.0\Moq.dll

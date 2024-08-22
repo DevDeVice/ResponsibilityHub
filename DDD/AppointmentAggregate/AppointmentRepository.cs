@@ -5,6 +5,12 @@ namespace ResponsibilityHub.DDD.AppointmentAggregate;
 
 public class AppointmentRepository : IRepository<AppointmentApp>
 {
+    public enum AppointmentStatus
+    {
+        Scheduled,
+        Canceled,
+        Completed
+    }
     private readonly List<AppointmentApp> _appointments = new();
 
     public void Add(AppointmentApp appointment)

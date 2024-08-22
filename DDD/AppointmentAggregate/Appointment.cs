@@ -2,6 +2,7 @@
 using ResponsibilityHub.DDD.Infrastructure;
 using ResponsibilityHub.Models;
 using ResponsibilityHub.Patterns;
+using static ResponsibilityHub.DDD.AppointmentAggregate.AppointmentRepository;
 
 namespace ResponsibilityHub.DDD.AppointmentAggregate;
 
@@ -39,13 +40,13 @@ public class AppointmentApp : Publisher, IAggregateRoot //value object,struct - 
     {
         _repository = repository;
         _infrastructure = infrastructure;
-        _infrastructure.Subscribe(this); // Rejestracja infrastruktury jako subskrybenta
+        _infrastructure.Subscribe(this); 
     }
 
     public Guid Id { get; private set; }
     public Slot Slot { get; private set; }
     public Person Patient { get; private set; }
-    public string Status { get; private set; } = "Scheduled";
+    public AppointmentStatus Status { get; private set; } = AppointmentStatus.Scheduled;
 
     public AppointmentApp(Guid id, Slot slot, Person patient)
     {
@@ -61,7 +62,7 @@ public class AppointmentApp : Publisher, IAggregateRoot //value object,struct - 
             Id = Guid.NewGuid();
             Slot = slot;
             Patient = patient;
-            Status = "Scheduled";
+            Status = AppointmentStatus.Scheduled;
 
             var ev = new AppointmentEvent.New(Id, Slot);
             Publish(ev);
@@ -76,21 +77,21 @@ public class AppointmentApp : Publisher, IAggregateRoot //value object,struct - 
 
     public void Cancel(Action onSuccess, Action<string> onError)
     {
-        if (Status == "Scheduled")
+        if (Status == AppointmentStatus.Scheduled)
         {
-            Status = "Canceled";
+            Status = AppointmentStatus.Canceled;
             var ev = new AppointmentEvent.Canceled(Id);
             Publish(ev);
-            onSuccess();
+            onSuccess?.Invoke();
         }
         else
         {
-            onError("Failed: Only scheduled appointments can be canceled.");
+            onError?.Invoke("Failed: Only scheduled appointments can be canceled.");
         }
     }
     public void Reschedule(Slot newSlot, Action onSuccess, Action<string> onError)
     {
-        if (Status == "Scheduled")
+        if (Status == AppointmentStatus.Scheduled)
         {
             if (newSlot.Start > DateTime.UtcNow.AddDays(1))
             {
